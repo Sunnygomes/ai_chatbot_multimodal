@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Document Assistant - Professional Analysis Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Professional trust-building colors based on color psychology
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe', 
+                            500: '#0ea5e9',  // Trust-building blue
+                            600: '#0284c7',
+                            700: '#0369a1'
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            500: '#64748b',  // Calm neutral gray
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        },
+                        success: '#22c55e',   // Calming green for success
+                        warning: '#f59e0b',   // Attention-grabbing amber
+                        error: '#ef4444',     // Clear red for errors
+                        accent: '#8b5cf6'     // Complementary purple for highlights
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'pulse-soft': 'pulseSoft 2s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulseSoft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+        }
+        .chat-bubble-bot {
+            background: white;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+        .file-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.1);
+            border-color: #0ea5e9;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans">
+    <!-- Professional Header -->
+    <header class="glass-morphism shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="h-10 w-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg">
+                                <i class="fas fa-robot text-white text-lg"></i>
+                            </div>
+                            <div class="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full animate-pulse-soft"></div>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-semibold text-secondary-900">AI Document Assistant</h1>
+                            <p class="text-xs text-secondary-600">Professional Document Analysis Platform</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-6 text-sm text-secondary-600">
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-file-pdf text-error"></i>
+                            <span>PDF</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-image text-success"></i>
+                            <span>Images</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-microphone text-primary-500"></i>
+                            <span>Audio</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleHelp()" 
+                            class="bg-secondary-100 hover:bg-secondary-200 text-secondary-700 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                        <i class="fas fa-question-circle mr-2"></i>Help
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Sidebar - File Manager -->
+            <div class="lg:col-span-1">
+                <div class="glass-morphism rounded-2xl shadow-lg p-6 sticky top-24 animate-fade-in">
+                    
+                    <!-- File Manager Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-secondary-900 flex items-center">
+                            <i class="fas fa-folder-open text-primary-500 mr-2"></i>
+                            Document Library
+                        </h2>
+                        <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded-full text-xs font-medium">
+                            {{ files|length }}
+                        </span>
+                    </div>
+                    
+                    <!-- Upload Section -->
+                    <form method="post" enctype="multipart/form-data" class="mb-6">
+                        <div class="border-2 border-dashed border-secondary-300 rounded-xl p-6 hover:border-primary-400 transition-colors duration-300 bg-white/50">
+                            <div class="text-center">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-secondary-400 mb-3"></i>
+                                <label for="file" class="block text-sm font-medium text-secondary-700 mb-2">
+                                    Upload Documents
+                                </label>
+                                <input type="file" id="file" name="file" 
+                                       class="block w-full text-sm text-secondary-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all">
+                                <p class="text-xs text-secondary-500 mt-2">Supports PDF, Images (PNG, JPG), Audio (WAV, MP3)</p>
+                            </div>
+                        </div>
+                        <button type="submit" 
+                                class="btn-primary w-full mt-4 text-white py-3 px-4 rounded-lg font-medium shadow-lg">
+                            <i class="fas fa-upload mr-2"></i>Upload & Process
+                        </button>
+                    </form>
+
+                    <!-- File List -->
+                    <div class="space-y-3 max-h-80 overflow-y-auto">
+                        <h3 class="text-sm font-medium text-secondary-700 border-b border-secondary-200 pb-2">
+                            Uploaded Files
+                        </h3>
+                        {% for file in files %}
+                        <div class="file-card p-3 bg-white/70 rounded-lg cursor-pointer transition-all duration-200"
+                             onclick="previewFile('{{ file.type }}', '{{ file.path }}', '{{ file.name }}')">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    {% if file.type == 'pdf' %}
+                                        <div class="h-8 w-8 bg-red-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-file-pdf text-error"></i>
+                                        </div>
+                                    {% elif file.type == 'image' %}
+                                        <div class="h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-image text-success"></i>
+                                        </div>
+                                    {% elif file.type == 'audio' %}
+                                        <div class="h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-microphone text-primary-500"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-secondary-900 truncate">{{ file.name }}</p>
+                                    <p class="text-xs text-secondary-500 capitalize">{{ file.type }} file</p>
+                                </div>
+                                <i class="fas fa-external-link-alt text-secondary-400 text-xs"></i>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-8">
+                            <i class="fas fa-folder-open text-3xl text-secondary-300 mb-3"></i>
+                            <p class="text-secondary-600 text-sm">No files uploaded yet</p>
+                            <p class="text-secondary-400 text-xs">Upload documents to get started</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="lg:col-span-3">
+                <div class="glass-morphism rounded-2xl shadow-lg p-6 animate-fade-in">
+                    
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="mb-6 animate-slide-up">
+                            <div class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle mr-3 text-success"></i>
+                                    <span class="text-sm">{{ messages[0] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Chat Header -->
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-secondary-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <div class="h-12 w-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg">
+                                    <i class="fas fa-robot text-white text-lg"></i>
+                                </div>
+                                <div class="absolute -bottom-1 -right-1 h-4 w-4 bg-success rounded-full border-2 border-white"></div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-secondary-900">AI Assistant</h3>
+                                <p class="text-sm text-secondary-600">Ready to analyze your documents</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="clearChat()" 
+                                    class="text-secondary-500 hover:text-error p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button onclick="exportChat()" 
+                                    class="text-secondary-500 hover:text-primary-500 p-2 rounded-lg hover:bg-primary-50 transition-colors">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div id="chat-history" class="mb-6 h-96 overflow-y-auto space-y-4 p-4 bg-white/30 rounded-xl border border-secondary-200">
+                        {% if answer %}
+                        <div class="animate-slide-up space-y-4">
+                            <!-- User Message -->
+                            <div class="flex justify-end">
+                                <div class="flex items-end space-x-2 max-w-sm lg:max-w-md">
+                                    <div class="chat-bubble-user px-4 py-3 rounded-2xl rounded-br-md shadow-lg">
+                                        <p class="text-sm">{{ request.form['question'] }}</p>
+                                        <p class="text-xs opacity-75 mt-1">Just now</p>
+                                    </div>
+                                    <div class="h-8 w-8 bg-secondary-200 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-secondary-600 text-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bot Response -->
+                            <div class="flex justify-start">
+                                <div class="flex items-end space-x-2 max-w-sm lg:max-w-md">
+                                    <div class="h-8 w-8 bg-primary-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot text-white text-sm"></i>
+                                    </div>
+                                    <div class="chat-bubble-bot px-4 py-3 rounded-2xl rounded-bl-md shadow-lg">
+                                        <p class="text-sm">{{ answer }}</p>
+                                        <p class="text-xs opacity-75 mt-1">Just now</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-16">
+                            <div class="mb-6">
+                                <i class="fas fa-comments text-5xl text-secondary-300"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-secondary-700 mb-2">Start Your Analysis</h3>
+                            <p class="text-secondary-600 mb-6">Upload documents and ask questions to get intelligent insights</p>
+                            {% if files %}
+                            <div class="bg-primary-50 border border-primary-200 rounded-lg p-4 max-w-sm mx-auto">
+                                <p class="text-primary-700 text-sm">
+                                    <i class="fas fa-lightbulb mr-2"></i>
+                                    {{ files|length }} document(s) ready for analysis
+                                </p>
+                            </div>
+                            {% else %}
+                            <div class="flex justify-center space-x-6 text-sm text-secondary-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-pdf mr-2 text-error"></i>PDFs
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-image mr-2 text-success"></i>Images
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-microphone mr-2 text-primary-500"></i>Audio
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Chat Input -->
+                    <form method="post" class="space-y-4">
+                        <div class="relative">
+                            <input type="text" name="question" 
+                                   class="w-full pl-4 pr-12 py-4 bg-white border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-base placeholder-secondary-500"
+                                   placeholder="Ask me anything about your uploaded documents..."
+                                   autocomplete="off" maxlength="500">
+                            <button type="submit" 
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 btn-primary text-white p-2.5 rounded-lg shadow-lg">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between text-sm text-secondary-500">
+                            <span class="flex items-center">
+                                <i class="fas fa-lightbulb mr-2 text-warning"></i>
+                                Ask specific questions for more accurate answers
+                            </span>
+                            <span id="char-count" class="text-xs">0 / 500</span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-white/70 border border-red-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-pdf text-error"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-secondary-700">PDF Documents</p>
+                                <p class="text-2xl font-bold text-red-600">
+                                    {{ files | selectattr("type", "equalto", "pdf") | list | length }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/70 border border-green-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-success"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-secondary-700">Images</p>
+                                <p class="text-2xl font-bold text-green-600">
+                                    {{ files | selectattr("type", "equalto", "image") | list | length }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/70 border border-blue-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-microphone text-primary-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-secondary-700">Audio Files</p>
+                                <p class="text-2xl font-bold text-blue-600">
+                                    {{ files | selectattr("type", "equalto", "audio") | list | length }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- File Preview Modal -->
+    <div id="file-preview-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 m-4 max-w-4xl max-h-[90vh] overflow-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="preview-title" class="text-xl font-bold text-dark">File Preview</h3>
+                <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="preview-content" class="text-center">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 m-4 max-w-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-dark flex items-center">
+                    <i class="fas fa-question-circle text-primary mr-3"></i>
+                    Help & Guide
+                </h3>
+                <button onclick="toggleHelp()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <h4 class="text-lg font-semibold text-dark mb-2">📁 File Upload</h4>
+                    <p class="text-gray-600">Upload PDF documents, images (PNG, JPG), or audio files (WAV, MP3). Files are automatically processed and organized.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-dark mb-2">💬 Ask Questions</h4>
+                    <p class="text-gray-600">Once files are uploaded, ask specific questions about their content. The AI will analyze and provide relevant answers.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-dark mb-2">👁️ File Preview</h4>
+                    <p class="text-gray-600">Click on any file in the sidebar to preview it. PDFs open in a new tab, images and audio have built-in viewers.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-dark mb-2">🔍 Best Practices</h4>
+                    <ul class="text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Ask specific, clear questions</li>
+                        <li>Upload high-quality, readable files</li>
+                        <li>Use relevant keywords in your questions</li>
+                        <li>Check the extracted text files in VS Code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-white/20 mt-12 py-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h5 class="text-lg font-bold text-dark mb-3">AI Document Chatbot</h5>
+                    <p class="text-gray-600 text-sm">Professional AI assistant for analyzing and answering questions from your documents, images, and audio files.</p>
+                </div>
+                <div>
+                    <h5 class="text-lg font-bold text-dark mb-3">Features</h5>
+                    <ul class="text-gray-600 text-sm space-y-1">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>PDF Text Extraction</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Image OCR Recognition</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Audio Transcription</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>AI-Powered Q&A</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-bold text-dark mb-3">Technology Stack</h5>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Python</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Flask</span>
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">AI/ML</span>
+                        <span class="bg-pink-100 text-pink-800 px-2 py-1 rounded-full text-xs">Tailwind CSS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 AI Document Chatbot. Built with ❤️ using Flask, Tailwind CSS, and HuggingFace Transformers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // File preview functionality
+        function previewFile(type, path, filename) {
+            const modal = document.getElementById('file-preview-modal');
+            const title = document.getElementById('preview-title');
+            const content = document.getElementById('preview-content');
+            
+            title.textContent = filename;
+            
+            if (type === 'pdf') {
+                content.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-file-pdf text-6xl text-red-500 mb-4"></i>
+                        <p class="text-lg font-semibold mb-4">PDF Document</p>
+                        <a href="/uploads/${path}" target="_blank" 
+                           class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/80 transition-all inline-flex items-center">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Open in New Tab
+                        </a>
+                    </div>
+                `;
+            } else if (type === 'image') {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <img src="/uploads/${path}" alt="${filename}" class="max-w-full max-h-96 rounded-lg shadow-lg mx-auto">
+                        <p class="text-sm text-gray-600 mt-4">${filename}</p>
+                    </div>
+                `;
+            } else if (type === 'audio') {
+                content.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-music text-6xl text-blue-500 mb-4"></i>
+                        <p class="text-lg font-semibold mb-4">Audio File</p>
+                        <audio controls class="w-full max-w-md mx-auto">
+                            <source src="/uploads/${path}" type="audio/mpeg">
+                            <source src="/uploads/${path}" type="audio/wav">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                `;
+            }
+            
+            modal.classList.remove('hidden');
+        }
+        
+        function closePreview() {
+            document.getElementById('file-preview-modal').classList.add('hidden');
+        }
+        
+        function toggleHelp() {
+            const modal = document.getElementById('help-modal');
+            modal.classList.toggle('hidden');
+        }
+        
+        function clearChat() {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                window.location.reload();
+            }
+        }
+        
+        function exportChat() {
+            alert('Export functionality coming soon!');
+        }
+        
+        // Character counter for input
+        document.querySelector('input[name="question"]').addEventListener('input', function(e) {
+            const charCount = e.target.value.length;
+            document.getElementById('char-count').textContent = `${charCount} / 500`;
+        });
+        
+        // Auto-scroll chat history
+        function scrollToBottom() {
+            const chatHistory = document.getElementById('chat-history');
+            if (chatHistory) {
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+        }
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('fixed')) {
+                e.target.classList.add('hidden');
+            }
+        });
+        
+        // Initialize
+        window.onload = function() {
+            scrollToBottom();
+            // Add loading animation for form submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function() {
+                    const button = form.querySelector('button[type="submit"]');
+                    if (button) {
+                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                        button.disabled = true;
+                    }
+                });
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Python dependencies for GPT-5 multimodal chatbot
+PyPDF2
+pdfplumber
+pytesseract
+Pillow
+flask
+werkzeug
+openai>=1.0.0
+python-dotenv
